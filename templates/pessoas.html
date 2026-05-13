@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+        <h3 class="text-white"><i class="bi bi-people me-2"></i>Pessoas Cadastradas</h3>
+    </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <a href="/cadastro" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Nova Pessoa</a>
+    </div>
+</div>
+
+<div class="card bg-dark border-secondary shadow">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" class="border-secondary px-4 py-3">ID</th>
+                        <th scope="col" class="border-secondary py-3">Nome</th>
+                        <th scope="col" class="border-secondary py-3">CPF</th>
+                        <th scope="col" class="border-secondary py-3 text-center">Qtd Fotos</th>
+                        <th scope="col" class="border-secondary py-3">Data de Cadastro</th>
+                        <th scope="col" class="border-secondary py-3 text-end px-4">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pessoa in pessoas %}
+                    <tr>
+                        <td class="border-secondary px-4 align-middle">#{{ pessoa.id }}</td>
+                        <td class="border-secondary align-middle fw-bold">{{ pessoa.nome }}</td>
+                        <td class="border-secondary align-middle">{{ pessoa.cpf }}</td>
+                        <td class="border-secondary align-middle text-center">
+                            <span class="badge bg-info text-dark rounded-pill">{{ pessoa.qtd_fotos }}</span>
+                        </td>
+                        <td class="border-secondary align-middle">{{ pessoa.data_cadastro.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td class="border-secondary align-middle text-end px-4">
+                            <!-- Botão Visualizar seria implementado numa rota /pessoas/id -->
+                            <button class="btn btn-sm btn-outline-light me-1" title="Visualizar (Em breve)"><i class="bi bi-eye"></i></button>
+                            <form action="/pessoas/excluir/{{ pessoa.id }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir esta pessoa? O histórico e fotos também serão perdidos.')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4 border-secondary">Nenhuma pessoa cadastrada.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

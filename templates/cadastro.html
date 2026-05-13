@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card bg-dark border-secondary shadow">
+            <div class="card-header border-secondary bg-transparent">
+                <h4 class="mb-0 text-white"><i class="bi bi-person-plus me-2"></i>Cadastro de Pessoa</h4>
+            </div>
+            <div class="card-body">
+                <form action="/cadastro" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label text-light">Nome Completo</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="nome" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cpf" class="form-label text-light">CPF</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="cpf" name="cpf" required placeholder="000.000.000-00">
+                    </div>
+                    <div class="mb-4">
+                        <label for="fotos" class="form-label text-light">Fotos do Rosto (Múltiplas suportadas)</label>
+                        <input class="form-control bg-dark text-white border-secondary" type="file" id="fotos" name="fotos" accept="image/jpeg, image/png" multiple required>
+                        <div class="form-text text-muted">Certifique-se de enviar fotos claras, onde o rosto esteja bem visível.</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

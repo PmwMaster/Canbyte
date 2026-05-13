@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h3 class="text-white"><i class="bi bi-camera-video me-2"></i>Reconhecimento via Webcam</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card bg-dark border-secondary shadow mb-4">
+            <div class="card-body p-0 position-relative" style="min-height: 480px; background: #000;">
+                <video id="videoElement" autoplay playsinline class="w-100 h-100 object-fit-cover" style="display: none;"></video>
+                <canvas id="canvasOverlay" class="position-absolute top-0 start-0 w-100 h-100" style="pointer-events: none; z-index: 10;"></canvas>
+                
+                <div id="loadingCam" class="position-absolute top-50 start-50 translate-middle text-center text-light">
+                    <div class="spinner-border text-primary mb-2" role="status"></div>
+                    <p>Iniciando câmera...</p>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-secondary text-center py-3">
+                <button id="btnStart" class="btn btn-success me-2"><i class="bi bi-play-fill"></i> Iniciar</button>
+                <button id="btnStop" class="btn btn-danger" disabled><i class="bi bi-stop-fill"></i> Parar</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-dark border-secondary shadow h-100">
+            <div class="card-header border-secondary bg-transparent">
+                <h5 class="mb-0 text-white">Último Reconhecimento</h5>
+            </div>
+            <div class="card-body text-center d-flex flex-column justify-content-center" id="resultContainer">
+                <i class="bi bi-person-bounding-box display-1 text-muted mb-3"></i>
+                <h4 class="text-muted" id="resNome">Aguardando...</h4>
+                <p class="text-muted mb-0" id="resConfianca">--</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
+{% endblock %}

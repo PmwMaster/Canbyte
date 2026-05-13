@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h3 class="text-white"><i class="bi bi-speedometer2 me-2"></i>Dashboard</h3>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Métricas principais -->
+    <div class="col-md-4">
+        <div class="card bg-primary bg-opacity-10 border-primary text-primary h-100 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-uppercase fw-bold opacity-75">Pessoas Cadastradas</h6>
+                        <h2 class="mb-0 fw-bold display-5">{{ total_pessoas }}</h2>
+                    </div>
+                    <div>
+                        <i class="bi bi-people display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-info bg-opacity-10 border-info text-info h-100 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-uppercase fw-bold opacity-75">Total de Imagens</h6>
+                        <h2 class="mb-0 fw-bold display-5">{{ total_imagens }}</h2>
+                    </div>
+                    <div>
+                        <i class="bi bi-images display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-success bg-opacity-10 border-success text-success h-100 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-uppercase fw-bold opacity-75">Reconhecimentos</h6>
+                        <h2 class="mb-0 fw-bold display-5">{{ total_reconhecimentos }}</h2>
+                    </div>
+                    <div>
+                        <i class="bi bi-check2-circle display-4 opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Histórico Recente -->
+    <div class="col-12">
+        <div class="card bg-dark border-secondary shadow">
+            <div class="card-header border-secondary bg-transparent d-flex justify-content-between align-items-center py-3 px-4">
+                <h5 class="mb-0 text-white"><i class="bi bi-clock-history me-2"></i>Últimos Reconhecimentos</h5>
+                <a href="{{ url_for('dashboard.exportar_pdf') }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>Exportar Relatório PDF
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="border-secondary px-4 py-3">Pessoa</th>
+                                <th scope="col" class="border-secondary py-3">Origem</th>
+                                <th scope="col" class="border-secondary py-3">Confiança</th>
+                                <th scope="col" class="border-secondary py-3">Data/Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rec in ultimos_reconhecimentos %}
+                            <tr>
+                                <td class="border-secondary px-4 align-middle fw-bold">
+                                    {{ rec.pessoa.nome }} <small class="text-muted d-block">{{ rec.pessoa.cpf }}</small>
+                                </td>
+                                <td class="border-secondary align-middle">
+                                    {% if rec.origem == 'webcam' %}
+                                        <span class="badge bg-success bg-opacity-25 text-success rounded-pill border border-success"><i class="bi bi-camera-video me-1"></i>Webcam</span>
+                                    {% else %}
+                                        <span class="badge bg-info bg-opacity-25 text-info rounded-pill border border-info"><i class="bi bi-upload me-1"></i>Upload</span>
+                                    {% endif %}
+                                </td>
+                                <td class="border-secondary align-middle">
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress flex-grow-1 me-2" style="height: 6px; background-color: rgba(255,255,255,0.1);">
+                                            <div class="progress-bar {% if rec.confianca > 80 %}bg-success{% elif rec.confianca > 60 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ rec.confianca }}%;" aria-valuenow="{{ rec.confianca }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span>{{ rec.confianca }}%</span>
+                                    </div>
+                                </td>
+                                <td class="border-secondary align-middle text-muted">{{ rec.data_hora.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4 border-secondary">Nenhum reconhecimento realizado ainda.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

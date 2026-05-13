@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+python/
+
+# Database
+database/*.db
+
+# Static / Uploads
+static/uploads/*
+!static/uploads/.gitkeep
+static/faces/*
+!static/faces/.gitkeep
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+python.zip
+get-pip.py
+python_installer.exe

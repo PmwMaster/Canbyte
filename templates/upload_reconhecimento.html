@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card bg-dark border-secondary shadow">
+            <div class="card-header border-secondary bg-transparent">
+                <h4 class="mb-0 text-white"><i class="bi bi-cloud-upload me-2"></i>Reconhecimento por Upload</h4>
+            </div>
+            <div class="card-body text-center">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="mb-4 text-start">
+                        <label for="foto" class="form-label text-light">Selecione uma imagem</label>
+                        <input class="form-control bg-dark text-white border-secondary" type="file" id="foto" name="foto" accept="image/*" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-info text-white w-100" id="btnUpload">
+                        <i class="bi bi-search me-2"></i>Buscar Pessoa
+                    </button>
+                </form>
+
+                <div id="loadingUpload" class="mt-4" style="display: none;">
+                    <div class="spinner-border text-info" role="status"></div>
+                    <p class="text-light mt-2">Processando imagem...</p>
+                </div>
+
+                <div id="resultUpload" class="mt-4" style="display: none;">
+                    <hr class="border-secondary">
+                    <div class="alert alert-success bg-success bg-opacity-10 border-success text-success" id="alertSuccess" style="display: none;">
+                        <h4 class="alert-heading"><i class="bi bi-check-circle-fill me-2"></i>Pessoa Identificada!</h4>
+                        <p class="mb-0 fs-5" id="upNome"></p>
+                        <hr>
+                        <p class="mb-0 small">Confiança: <strong id="upConfianca"></strong>%</p>
+                    </div>
+                    
+                    <div class="alert alert-danger bg-danger bg-opacity-10 border-danger text-danger" id="alertError" style="display: none;">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i><span id="upErrorMsg"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const form = e.target;
+        const formData = new FormData(form);
+        const btnUpload = document.getElementById('btnUpload');
+        const loading = document.getElementById('loadingUpload');
+        const result = document.getElementById('resultUpload');
+        const alertSuccess = document.getElementById('alertSuccess');
+        const alertError = document.getElementById('alertError');
+        
+        btnUpload.disabled = true;
+        loading.style.display = 'block';
+        result.style.display = 'none';
+        alertSuccess.style.display = 'none';
+        alertError.style.display = 'none';
+        
+        try {
+            const res = await fetch('/upload-reconhecimento', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await res.json();
+            
+            loading.style.display = 'none';
+            result.style.display = 'block';
+            
+            if (data.success) {
+                alertSuccess.style.display = 'block';
+                document.getElementById('upNome').textContent = data.nome;
+                document.getElementById('upConfianca').textContent = data.confianca;
+            } else {
+                alertError.style.display = 'block';
+                document.getElementById('upErrorMsg').textContent = data.message || "Erro desconhecido";
+            }
+        } catch (err) {
+            loading.style.display = 'none';
+            result.style.display = 'block';
+            alertError.style.display = 'block';
+            document.getElementById('upErrorMsg').textContent = "Erro na requisição.";
+        } finally {
+            btnUpload.disabled = false;
+        }
+    });
+</script>
+{% endblock %}
